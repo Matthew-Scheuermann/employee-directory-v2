@@ -2,6 +2,23 @@ import express from "express";
 import { getEmployee, getEmployees, getRandomEmployee } from "#db/employees";
 
 const app = express();
+
+app.use(express.json());
+
+app.post("/employees", (req, res) => {
+  const name = req.body?.name;
+
+  if (!name) {
+    return res.status(400).send("A name is required.");
+  }
+
+  const employees = getEmployees();
+  const newEmployee = { id: employees.length + 1, name };
+  employees.push(newEmployee);
+
+  res.status(201).send(newEmployee);
+});
+
 export default app;
 
 app.get("/", (req, res) => {
